@@ -75,7 +75,23 @@ CREATE TABLE RelProfessorTurma (
 	FOREIGN KEY (professorCodigo) REFERENCES Professor(codigo)
 );
 
-select * from turma
+CREATE TABLE RelAlunoTurma (
+	codigo SERIAL PRIMARY KEY,
+	alunoCodigo INT,
+	turmaCodigo INT,
+	FOREIGN KEY (alunoCodigo) REFERENCES Aluno(codigo),
+    FOREIGN KEY (turmaCodigo) REFERENCES Turma(codigo)
+);
+
+-- Vinculando Alunos a Turmas
+INSERT INTO RelAlunoTurma (alunoCodigo, turmaCodigo)
+VALUES
+    (1, 1), -- Aluno 1 na Turma 1 (Matemática)
+    (2, 1), -- Aluno 2 na Turma 1 (Matemática)
+    (3, 1), -- Aluno 3 na Turma 1 (Matemática)
+    (4, 2), -- Aluno 4 na Turma 2 (História)
+    (5, 2), -- Aluno 5 na Turma 2 (História)
+
 
 INSERT INTO Professor (nome, dataNascimento, usuario, senha, cargo)
 VALUES
@@ -149,4 +165,24 @@ VALUES
     (3, 5), -- Professor 3 na Turma 5
     (4, 1), -- Professor 4 na Turma 1
     (5, 2); -- Professor 5 na Turma 2
+
+
+select * from rendimentoEscolar
+where alunoCodigo = 2
+
+
+SELECT dis.* 
+FROM Disciplina AS dis 
+JOIN Turma AS tur ON (dis.codigo = tur.disciplinacodigo)
+JOIN RelAlunoTurma AS aluTur ON (tur.codigo = aluTur.turmacodigo)
+WHERE aluTur.alunoCodigo = 
+
+SELECT *, trb.descricao 
+FROM NotaTrabalho as notaTrab
+JOIN Trabalho as trb ON(notaTrab.trabalhocodigo = trb.codigo)
+WHERE alunoCodigo = 2
+
+SELECT * FROM Turma WHERE codigo = ?
+
+
 

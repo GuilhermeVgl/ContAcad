@@ -89,24 +89,23 @@ public class Main {
 
         String confirmar = "";
 
-        System.out.println("\nDeseja Listar as turmas de um professor?");
-        System.out.println("S/N");
+        System.out.println("---------------------------------");
+        System.out.println("1 - Listar as turmas de um professor");
+        System.out.println(" ");
+        System.out.println("0 - Voltar");
         
         confirmar = scan.nextLine();
 
         switch(confirmar) 
         {
-            case "S":
-            case "s":
+            case "1":
                 System.out.print("Digite o código do professor que deseja listar:\n");
                 Integer professorSelecionado = scan.nextInt();
                 listarTurmasProfessor(professorSelecionado);
             break;
 
-            case "N":
-            case "n":
-
-                return;
+            case "0":
+            break;
 
             default:
                 System.out.println("Opção inválida!");
@@ -121,12 +120,21 @@ public class Main {
         
         ProfessorVO professorSelecionado = new ProfessorVOService().getProfessorByCod(codigoProfessor);
 
-        System.out.print("O professor: " + professorSelecionado.getNome() + " dá aula para as turmas: ");
-
-        for (RelProfessorTurma relacionamento : relacionamentos) {
-            System.out.print(relacionamento.getTurma() + ",");
+        if (professorSelecionado == null)
+        {
+            System.out.println("Professor não encontrado!");
         }
-        desejaListarAlunos();
+        else 
+        {
+            System.out.print("O professor: " + professorSelecionado.getNome() + " dá aula para as turmas: ");
+
+            for (RelProfessorTurma relacionamento : relacionamentos) {
+                System.out.print(relacionamento.getTurma() + ", ");
+            }
+            System.out.print("\b\b ");
+            System.out.println(" ");
+            desejaListarAlunos();
+        }
     }
 
     public static void desejaListarAlunos() 
@@ -135,24 +143,23 @@ public class Main {
 
         String confirmar = "";
 
-        System.out.println("\nDeseja Listar os alunos de uma turma?");
-        System.out.println("S/N");
+        System.out.println("\n---------------------------------");
+        System.out.println("1 - Listar os alunos de uma turma");
+        System.out.println(" ");
+        System.out.println("0 - Voltar");
         
         confirmar = scan.nextLine();
 
         switch(confirmar) 
         {
-            case "S":
-            case "s":
+            case "1":
                 System.out.print("Digite o código da turma que deseja consultar:\n");
                 Integer turmaSelecionada = scan.nextInt();
                 listarAlunosDaTurma(turmaSelecionada);
             break;
 
-            case "N":
-            case "n":
-
-                return;
+            case "0":
+            break;
 
             default:
                 System.out.println("Opção inválida!");
@@ -167,7 +174,7 @@ public class Main {
 
         if(relacionamentos.isEmpty())
         {
-            System.out.println("Não há alunos matrículados nesta turma!");
+            System.out.println("Turma não existe ou não existem alunos matrículados nesta turma!");
         } else 
         {
             System.out.println("Nesta turma estão matrículados os seguintes alunos: ");
@@ -175,6 +182,8 @@ public class Main {
             {
                 System.out.print(relacionamento.getAlunoCodigo() + ", ");
             }
+            System.out.print("\b\b ");
+            System.out.println("");
             desejaConsultarNotasAlunos();
         }
     }
@@ -185,24 +194,23 @@ public class Main {
 
         String confirmar = "";
 
-        System.out.println("\nDeseja Consultar notas de um aluno?");
-        System.out.println("S/N");
+        System.out.println("---------------------------------");
+        System.out.println("1 - Consultar notas de um aluno");
+        System.out.println(" ");
+        System.out.println("0 - Voltar");
         
         confirmar = scan.nextLine();
 
         switch(confirmar) 
         {
-            case "S":
-            case "s":
-                System.out.print("Digite o código do aluno que deseja consultar :\n");
+            case "1":
+                System.out.print("Digite o código do aluno que deseja consultar:\n");
                 Integer alunoSelecionado = scan.nextInt();
                 consultarNotasAluno(alunoSelecionado);
             break;
 
-            case "N":
-            case "n":
-
-                return;
+            case "0":
+            break;
 
             default:
                 System.out.println("Opção inválida!");
@@ -215,7 +223,14 @@ public class Main {
 
         RendimentoEscolar rendimentoEscolarDoAluno = rendimentoEscolar.consultarNotasAluno(codigoAluno);
 
-        rendimentoEscolarDoAluno.Imprimir();
+        if(rendimentoEscolarIsNull(rendimentoEscolarDoAluno))
+        {
+            rendimentoEscolarDoAluno.Imprimir();
+        }
+        else 
+        {
+            System.out.println("Aluno não encontrado");
+        }
     }
 
     public static void menuAluno()
@@ -251,9 +266,15 @@ public class Main {
                 DisciplinaVOService disciplinaService = new DisciplinaVOService();
                 DisciplinaVO disciplinaSelecionada = disciplinaService.buscarDisciplinaAluno(alunoDisciplina);
 
-                System.out.println("Disciplina que o aluno cursa: " + disciplinaSelecionada.getNome());
-
-                menuNotasAluno(alunoDisciplina);
+                if(disciplinaSelecionada.getCodigo() == null)
+                {
+                    System.out.println("Aluno não encontrado!");
+                }
+                else
+                {
+                    System.out.println("Disciplina que o aluno cursa: " + disciplinaSelecionada.getNome());
+                    menuNotasAluno(alunoDisciplina);
+                }
             break;
 
             case "3":
@@ -261,6 +282,10 @@ public class Main {
                 Integer aluno = scan.nextInt();
 
                 consultarNotasAluno(aluno);
+            break;
+
+            case "0":
+                System.out.println("Voltando!");
             break;
 
             default:
@@ -284,26 +309,27 @@ public class Main {
         } else 
         {
             System.out.println("Turma do aluno selecionado é a seguinte: " + turmaAluno.getTurmaCodigo());
+
+            System.out.println("--------------------------------------");
+            System.out.println("1 - Mostrar as informações desta turma");
+            System.out.println(" ");
+            System.out.println("0 - Voltar");
+            
+            confirmar = scan.nextLine();
+    
+            switch (confirmar) {
+                case "1":
+                    buscarTurma(turmaAluno.getTurmaCodigo());
+                break;
+    
+                case "0":
+                break;
+    
+                default:
+                    System.out.println("Opção inválida!");
+            }
         }
 
-        System.out.println("Deseja mostrar as informações desta turma?");
-        System.out.println("S/N");
-        confirmar = scan.nextLine();
-
-        switch (confirmar) {
-            case "S":
-            case "s":
-                buscarTurma(turmaAluno.getTurmaCodigo());
-            break;
-
-            case "N":
-            case "n":
-
-            break;
-
-            default:
-                System.out.println("Opção inválida!");
-        }
     }
 
     public static void buscarTurma(Integer codigoTurma) 
@@ -324,6 +350,8 @@ public class Main {
         System.out.println("1 - notas do aluno na disciplina selecionada.");
         System.out.println(" ");
         System.out.println("2 - Notas de trabalho do aluno.");
+        System.out.println(" ");
+        System.out.println("0 - Voltar");
 
         confirmar = scan.nextLine();
 
@@ -345,7 +373,16 @@ public class Main {
                 System.out.println("Nota do aluno no trabalho: " + notaTrabalhoAluno.getTrabalho() + " é: " + notaTrabalhoAluno.getNota());
             break;
 
+            case "0":
+            break;
+
             default:
+                System.out.println("Opção inválida!");
         }
+    }
+
+    public static boolean rendimentoEscolarIsNull(RendimentoEscolar rendimentoEscolar)
+    {
+        return rendimentoEscolar.getAluno() != null && rendimentoEscolar.getTurma() != null && rendimentoEscolar.getPrimeiraNotaProva() != null && rendimentoEscolar.getSegundaNotaProva() != null && rendimentoEscolar.getMediaGeralAluno() != null && rendimentoEscolar.getMediaTrabalhos() != null;
     }
 }

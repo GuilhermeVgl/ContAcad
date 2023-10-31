@@ -31,6 +31,8 @@ public class ProfessorVO extends BasePessoa{
         System.out.println("Codigo: " + this.codigo);
         System.out.println("Nome: " + this.nome);
         System.out.println("Data de Nascimento: " + this.dataNascimento);
+        System.out.println("Cargo: " + this.cargo);
+        System.out.println(" ");
     }
 
     public ProfessorVO() {
